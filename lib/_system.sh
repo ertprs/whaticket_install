@@ -15,8 +15,8 @@ system_create_user() {
   sleep 2
 
   sudo su - root <<EOF
-  useradd -m -p $(openssl passwd -crypt $deploy_password) -s /bin/bash -G sudo deploy
-  usermod -aG sudo deploy
+  useradd -m -p $(openssl passwd -crypt $Sistemas_password) -s /bin/bash -G sudo Sistemas
+  usermod -aG sudo Sistemas
 EOF
 
   sleep 2
@@ -35,10 +35,11 @@ system_git_clone() {
 
   sleep 2
 
-  sudo su - deploy <<EOF
+  sudo su - Sistemas <<EOF
    # git clone https://github.com/canove/whaticket  /home/Sistemas/${instancia_add}/
    # git clone https://github.com/whaticket/whaticket-community   /home/Sistemas/${instancia_add}/
-     git clone https://github.com/rtenorioh/Press-Ticket  /home/Sistemas/${instancia_add}/
+   # git clone https://github.com/rtenorioh/Press-Ticket  /home/Sistemas/${instancia_add}/
+     git clone https://github.com/jerbison/Whaticket-owz   /home/Sistemas/${instancia_add}/
 EOF
 
   sleep 2
@@ -188,8 +189,8 @@ system_pm2_install() {
 
   sudo su - root <<EOF
   npm install -g pm2
-  pm2 startup ubuntu -u deploy
-  env PATH=\$PATH:/usr/bin pm2 startup ubuntu -u deploy --hp /home/Sistemas/${instancia_add}
+  pm2 startup ubuntu -u Sistemas
+  env PATH=\$PATH:/usr/bin pm2 startup ubuntu -u Sistemas --hp /home/Sistemas/${instancia_add}
 EOF
 
   sleep 2
@@ -290,7 +291,7 @@ system_nginx_conf() {
 
 #sudo su - root << EOF
 
-#cat > /etc/nginx/conf.d/owenzap.conf << 'END'
+#cat > /etc/nginx/conf.d/system.conf << 'END'
 #client_max_body_size 20M;
 #END
 
@@ -315,7 +316,7 @@ system_certbot_setup() {
   frontend_domain=$(echo "${frontend_url/https:\/\/}")
 
   sudo su - root <<EOF
-  certbot -m $deploy_email \
+  certbot -m $Sistemas_email \
           --nginx \
           --agree-tos \
           --non-interactive \
